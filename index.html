@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>News App</title>
+    <style>
+      #navbar{
+        display: flex;
+      }
+      #navbar > a {
+        flex: 2;
+        margin: 20px;
+        font-size: 24px;
+      }
+      #search_input{
+        flex: 8;
+        margin: 50px;
+        margin-top: 10px;
+        height: 40px;
+        padding-left: 10px;
+      }
+      #block-2{
+        display: flex;
+      }
+      #sidebar {
+        flex: 2;
+        margin: 10px;
+      }
+      h3{
+        padding: 10px;
+        background-color: teal;
+      }
+      h3:hover{
+        cursor: pointer;
+      }
+      #results{
+        flex: 8;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar"></div>
+    <div id="block-2">
+      <div id="sidebar">
+        <h2>Countries</h2>
+        <h3 id="in" onclick="cSearch(this.id)">India</h3>
+        <h3 id="ch" onclick="cSearch(this.id)">China</h3>
+        <h3 id="us" onclick="cSearch(this.id)">Usa</h3>
+        <h3 id="uk" onclick="cSearch(this.id)">United Kingdom</h3>
+        <h3 id="nz" onclick="cSearch(this.id)">New Zealand</h3>
+      </div>
+      <div id="results">
+
+      </div>
+
+    </div>
+    
+    <!-- Give Navbar with id "navbar"  -->
+    <!-- Navbar will have input with id search_input and a link to home page i.e. index.html -->
+    <!-- Sidebar will have id "sidebar"  -->
+    <!-- Give link to top headlines of countries in sidebar with id as their country codes 
+    india :- in
+    china :- ch
+    usa :- us
+    uk : uk
+    Newzeland :- nz -->
+
+    <!-- Append results inside div with id "results"  -->
+    <!-- News divs will have class "news"  -->
+  </body>
+</html>
+<script src="/scripts/index.js" type="module"></script>
+<script>
+  // let input = document.getElementById("search_input")
+  const input = document.querySelector("input")
+
+  input.addEventListener("keydown",(e)=>{
+    if(e.keycode === 13){
+      console.log(e.target.value)
+    }
+  })
+
+
+  function cSearch(id) {
+    console.log(id)
+    const container = document.getElementById("results")
+      container.innerText = null
+      let url = `https://masai-mock-api.herokuapp.com/news/top-headlines?country=${id}`
+    // let res;
+
+    fetch(url)
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (res) {
+        appendData(res.articles)
+        console.log(res)
+      })
+      .catch(function (err) {
+        console.log(err)
+      });
+
+    // appendData(res)
+
+    function appendData(data) {
+      console.log(data)
+      data.forEach(function (el) {
+        let box = document.createElement("div")
+        let img = document.createElement("img")
+        img.src = el.urlToImage;
+        let headline = document.createElement("h4")
+        headline.innerText = el.title;
+        let para = document.createElement("p")
+        para.innerText = el.description
+        let left = document.createElement("div")
+        let right = document.createElement("div")
+        right.style.padding = "10px"
+        left.append(img)
+        right.append(headline, para)
+        box.append(left, right)
+        box.style.height = "170px"
+        img.style.height = "100%"
+        img.style.width = "250px"
+        box.style.display = "flex"
+        left.style.flex = "2"
+        right.style.flex = "8"
+        box.style.margin = "15px"
+        box.style.border = "1px solid blue"
+        container.append(box)
+        // box.addEventListener(onclick,details)
+      });
+    }
+    }
+
+    // function details(){
+    //   console.log("el")
+    // }
+</script>
